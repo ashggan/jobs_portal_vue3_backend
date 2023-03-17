@@ -1,12 +1,9 @@
-import { PrismaClient } from "@prisma/client";
-import { Category } from "./categoryModel";
-
 export type Job = {
   id: number;
   category_id: number;
   latitude: number;
   location: Location;
-  category: Category;
+  category: number;
   salary_max: number;
   created: Date;
   salary_is_predicted: string;
@@ -18,21 +15,3 @@ export type Job = {
   title: string;
   user_id: number;
 };
-
-const prisma = new PrismaClient();
-
-export class JobService {
-  async findAll(): Promise<Job[]> {
-    try {
-      const allUsers = await prisma.Job.findMany();
-
-      return allUsers;
-    } catch (async (error: any) => {
-        console.error(error)
-        await prisma.$disconnect()
-        process.exit(1)
-    })
-        
-    
-  }
-}

@@ -3,6 +3,10 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+generator client {
+    provider = "prisma-client-js"
+}
+
 model Job {
     id                  Int      @id @default(autoincrement())
     location            String
@@ -18,16 +22,26 @@ model Job {
     company             String
     title               String
     user_id             Int
-    User                User     @relation(fields: [user_id], references: [id])
+    tags                Tag[]
+    user                User     @relation(fields: [user_id], references: [id])
 }
 
 model Category {
     id    Int    @id @default(autoincrement())
-    label String
+    label String @unique
     Job   Job[]
 }
 
 model User {
-    id  Int   @id @default(autoincrement())
-    Job Job[]
+    id       Int    @id @default(autoincrement())
+    name     String
+    email    String @unique
+    password String
+    Job      Job[]
+}
+
+model Tag {
+    id   Int    @id @default(autoincrement())
+    name String @unique
+    job  Job[]
 }

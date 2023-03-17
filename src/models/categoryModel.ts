@@ -1,1 +1,5 @@
-export type Category = {};
+export type Category = {
+  label: string;
+  id?: number;
+  // jobs: Job[];
+};
