@@ -1,0 +1,33 @@
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Job {
+    id                  Int      @id @default(autoincrement())
+    location            String
+    category_id         Int
+    category            Category @relation(fields: [category_id], references: [id])
+    salary_max          Int
+    salary_min          Int
+    createdAt           DateTime @default(now()) @db.Timestamp(6)
+    salary_is_predicted String
+    description         String
+    contract_type       String
+    redirect_url        String
+    company             String
+    title               String
+    user_id             Int
+    User                User     @relation(fields: [user_id], references: [id])
+}
+
+model Category {
+    id    Int    @id @default(autoincrement())
+    label String
+    Job   Job[]
+}
+
+model User {
+    id  Int   @id @default(autoincrement())
+    Job Job[]
+}
