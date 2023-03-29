@@ -11,7 +11,7 @@ model Job {
     id                  Int      @id @default(autoincrement())
     location            String
     category_id         Int
-    category            Category @relation(fields: [category_id], references: [id])
+    // category            Category @relation(fields: [category_id], references: [id])
     salary_max          Int
     salary_min          Int
     createdAt           DateTime @default(now()) @db.Timestamp(6)
@@ -26,18 +26,14 @@ model Job {
     user                User     @relation(fields: [user_id], references: [id])
 }
 
-model Category {
-    id    Int    @id @default(autoincrement())
-    label String @unique
-    Job   Job[]
-}
-
 model User {
-    id       Int    @id @default(autoincrement())
-    name     String
-    email    String @unique
-    password String
-    Job      Job[]
+    id        Int      @id @default(autoincrement())
+    name      String
+    email     String   @unique
+    password  String
+    Job       Job[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model Tag {
