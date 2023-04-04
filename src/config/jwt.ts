@@ -21,7 +21,7 @@ const compare = async (hash: string, pass: string) => {
 };
 
 // Function to generate tokens
-const generateToken = (id) => {
+const generateToken = (id: string) => {
   return jwt.sign({ id }, <string>JWT_SECRET, {
     expiresIn: JWT_EXPIRE,
   });

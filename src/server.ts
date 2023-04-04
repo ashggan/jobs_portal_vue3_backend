@@ -1,13 +1,15 @@
 import express from "express";
 import jobs_routes from "./routes/jobsRoutes";
-import categories_routes from "./routes/categoryRoute";
+import users_routes from "./routes/usersRoute";
+// import categories_routes from "./routes/categoryRoute";
 
 const app = express();
 app.use(express.json());
 
 // routes
 jobs_routes(app);
-categories_routes(app);
+users_routes(app);
+// categories_routes(app);
 
 const PORT = 5001;
 app.listen(PORT, () =>

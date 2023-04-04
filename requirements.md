@@ -29,3 +29,6 @@ Optimize your site for search engines to attract more traffic and increase the v
 - Update users ['/users/update'] - [PUT]
 - Get users ['/users/get'] - [GET]
 - Sign in users ['/users/signin'] - [POST]
+- Sign up users ['/users/signup'] - [POST]
+- Sign in users-Google ['/users/google'] - [POST]
+- Sign in users0LinkedIn ['/users/linkedin'] - [POST]
