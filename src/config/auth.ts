@@ -1,8 +1,8 @@
-import { PrismaClient, User } from "@prisma/client";
-import { Strategy } from "passport-local";
+import { PrismaClient } from "@prisma/client";
+import { Strategy as LocalStrategy } from "passport-local";
+
 import { hash, compare } from "./jwt";
 import passport from "passport";
-// import { Request } from "express";
 
 require("dotenv").config();
 
@@ -16,31 +16,57 @@ const options = {
   passReqToCallback: true,
 };
 
-// const signup = new Strategy("sign-up", {});
+//  create local Strategy sign in
+passport.use(
+  "signin",
+  new LocalStrategy({ usernameField: "email" }, async function (
+    email: string,
+    password: string,
+    done: Function
+  ) {
+    try {
+      const user = await prisma.user.findUnique({ where: { email } });
+      if (!user) {
+        return done(null, false, { message: "Incorrect email or password." });
+      }
+
+      const isMatch = await compare(password, user.password);
+
+      if (!isMatch)
+        return done(null, false, { message: "Incorrect email or password." });
+
+      return done(user, null);
+    } catch (error) {
+      return error;
+    }
+  })
+);
+
 passport.use(
   "signup",
-  new Strategy(async (email, password, done) => {
+  new LocalStrategy({ usernameField: "email" }, async function (
+    email: string,
+    password: string,
+    done: Function
+  ) {
     try {
-      // const { email , name , password } = req.body
-      console.log("sd");
-      const user = await prisma.user.findUnique({
-        where: { email },
-      });
+      const user = await prisma.user.findUnique({ where: { email } });
+      if (user) {
+        return done(user, false, { message: " email already exist !" });
+      }
+
+      const hashed = await hash(password);
 
       const data = {
-        password: await hash(password),
-        email,
         name: "",
+        email,
+        password: hashed,
       };
-      // Create the user
-      const NewUser = await prisma.user.create({
-        data,
-      });
+      const newUser = await prisma.user.create({ data });
 
-      // await prisma.user.create({ data });
-      return done(null, NewUser);
+      return done(newUser, null);
     } catch (error) {
-      return done(error);
+      return error;
     }
   })
 );
