@@ -41,3 +41,10 @@ model Tag {
     name String @unique
     job  Job[]
 }
+
+model Session {
+    id        String   @id
+    sid       String   @unique
+    data      Json     @db.Json // NOTE: Up until v3.1.9, data's type was defined as String
+    expiresAt DateTime
+}

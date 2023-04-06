@@ -13,13 +13,12 @@ const prisma = new PrismaClient();
 const options = {
   usernameField: "email",
   passwordField: "password",
-  passReqToCallback: true,
 };
 
 //  create local Strategy sign in
 passport.use(
   "signin",
-  new LocalStrategy({ usernameField: "email" }, async function (
+  new LocalStrategy(options, async function (
     email: string,
     password: string,
     done: Function
@@ -30,21 +29,21 @@ passport.use(
         return done(null, false, { message: "Incorrect email or password." });
       }
 
-      const isMatch = await compare(password, user.password);
+      const isMatch = await compare(user.password, password);
 
       if (!isMatch)
         return done(null, false, { message: "Incorrect email or password." });
 
       return done(user, null);
     } catch (error) {
-      return error;
+      return done(error);
     }
   })
 );
 
 passport.use(
   "signup",
-  new LocalStrategy({ usernameField: "email" }, async function (
+  new LocalStrategy(options, async function (
     email: string,
     password: string,
     done: Function
@@ -52,7 +51,7 @@ passport.use(
     try {
       const user = await prisma.user.findUnique({ where: { email } });
       if (user) {
-        return done(user, false, { message: " email already exist !" });
+        return done(user, false, { message: " email already exist!" });
       }
 
       const hashed = await hash(password);
@@ -66,7 +65,7 @@ passport.use(
 
       return done(newUser, null);
     } catch (error) {
-      return error;
+      return done(error);
     }
   })
 );
