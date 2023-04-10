@@ -3,12 +3,14 @@ import jobs_routes from "./routes/jobsRoutes";
 import users_routes from "./routes/usersRoute";
 import expressSession from "express-session";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
-import { PrismaClient } from "@prisma/client";
+import passport from "passport";
+import prisma from "./config/prisma";
+
 // import categories_routes from "./routes/categoryRoute";
+import("./config/passport");
 
 const app = express();
 app.use(express.json());
-const prisma = new PrismaClient();
 
 app.use(
   expressSession({
@@ -24,9 +26,12 @@ app.use(
   })
 );
 
-// prisma migrate dev --name sessions
+app.use(passport.initialize());
+app.use(passport.session());
 
-// routes
+/* 
+routes  
+**/
 jobs_routes(app);
 users_routes(app);
 // categories_routes(app);
