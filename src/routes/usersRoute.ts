@@ -30,12 +30,19 @@ const signin =
 const users_routes = (app: Application) => {
   app.post("/users/signup", signin("signup"));
   app.post("/users/signin", signin("signin"));
-  app.get("/", (req: Request, res: Response) => {
+  app.get(
+    "/users/google",
+    passport.authenticate("google", { scope: ["profile", "email"] })
+  );
+  app.post("/users/linkedin", signin("linkedin"));
+  app.get("/home", (req: Request, res: Response) => {
     // console.log(req.session);
     // req.session.views = (req.session.views ?? 0) + 1;
     // res.send(`yuo visited this site ${req.session.views} times`);
     res.render("../views/index.html");
   });
+  app.get("/auth/google", (req: Request, res: Response) => {
+    res.send("you are in");
+  });
 };
-
 export default users_routes;
